@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Minions AR Experience</title>
     <script src="https://aframe.io/releases/1.3.0/aframe.min.js"></script>
     <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
@@ -11,38 +11,6 @@
             margin: 0;
             overflow: hidden;
             font-family: Arial, sans-serif;
-        }
-        #loading {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: rgba(0,0,0,0.9);
-            color: white;
-            padding: 30px;
-            border-radius: 15px;
-            z-index: 10000;
-            text-align: center;
-            max-width: 80%;
-        }
-        #loading h2 {
-            margin: 0 0 15px 0;
-            font-size: 20px;
-        }
-        #loading p {
-            margin: 10px 0;
-            font-size: 14px;
-            line-height: 1.5;
-        }
-        #loading button {
-            margin-top: 15px;
-            padding: 12px 25px;
-            background: #4CAF50;
-            color: white;
-            border: none;
-            border-radius: 8px;
-            font-size: 16px;
-            cursor: pointer;
         }
         #instructions {
             position: absolute;
@@ -56,7 +24,6 @@
             z-index: 1000;
             text-align: center;
             max-width: 80%;
-            display: none;
         }
         #instructions h2 {
             margin: 0 0 10px 0;
@@ -66,47 +33,34 @@
             margin: 5px 0;
             font-size: 14px;
         }
-        .error {
-            background: rgba(200, 0, 0, 0.9) !important;
+        .found {
+            background: rgba(0, 150, 0, 0.9) !important;
         }
     </style>
 </head>
 <body>
-    <div id="loading">
-        <h2>📸 Camera Access Required</h2>
-        <p>This AR experience needs your camera to work.</p>
-        <p><strong>Click below to start!</strong></p>
-        <button onclick="startAR()">Start AR Experience</button>
-        <p style="font-size: 12px; margin-top: 20px; color: #ccc;">
-            Make sure to allow camera when prompted
+    <div id="instructions">
+        <h2>🎯 Point camera at Hiro marker</h2>
+        <p>Your Minion will appear and dance!</p>
+        <p style="font-size: 12px; margin-top: 10px;">
+            📏 Hold phone about 20-30cm (8-12 inches) from marker
         </p>
     </div>
 
-    <div id="instructions">
-        <h2>🎯 Point at Hiro Marker</h2>
-        <p>Hold phone ~30cm (12 inches) away from marker</p>
-        <p style="font-size: 12px;">Marker should fit in view</p>
-    </div>
-
     <a-scene
-        id="arScene"
         embedded
-        arjs="sourceType: webcam; 
-              debugUIEnabled: false; 
-              detectionMode: mono_and_matrix; 
-              matrixCodeType: 3x3;
-              sourceWidth: 1280;
-              sourceHeight: 960;
-              displayWidth: 1280;
-              displayHeight: 960;"
+        arjs="sourceType: webcam; debugUIEnabled: false; detectionMode: mono_and_matrix; matrixCodeType: 3x3;"
         vr-mode-ui="enabled: false"
-        renderer="logarithmicDepthBuffer: true; precision: medium;"
-        style="display: none;">
+        renderer="logarithmicDepthBuffer: true; precision: medium;">
         
-        <a-camera gps-camera rotation-reader></a-camera>
+        <!-- Camera -->
+        <a-entity camera></a-entity>
 
+        <!-- Marker-based content -->
         <a-marker preset="hiro" id="marker">
-            <a-entity id="minion" position="0 0 0" scale="0.8 0.8 0.8">
+            <!-- Minion Character -->
+            <a-entity id="minion" position="0 0 0">
+                <!-- Body (yellow cylinder) -->
                 <a-cylinder 
                     position="0 0.5 0" 
                     radius="0.3" 
@@ -115,6 +69,7 @@
                     animation="property: rotation; to: 0 360 0; loop: true; dur: 4000; easing: linear">
                 </a-cylinder>
                 
+                <!-- Overalls (blue) -->
                 <a-box 
                     position="0 0.3 0.2" 
                     width="0.5" 
@@ -123,13 +78,16 @@
                     color="#0066CC">
                 </a-box>
                 
+                <!-- Eye (goggles) -->
                 <a-entity position="0 0.7 0.25">
+                    <!-- Goggle band -->
                     <a-torus 
                         radius="0.25" 
                         radius-tubular="0.03" 
                         rotation="90 0 0" 
                         color="#333333">
                     </a-torus>
+                    <!-- Eyes -->
                     <a-sphere 
                         radius="0.12" 
                         color="white"
@@ -142,6 +100,7 @@
                     </a-sphere>
                 </a-entity>
                 
+                <!-- Arms (bouncing) -->
                 <a-cylinder 
                     position="-0.35 0.5 0" 
                     radius="0.05" 
@@ -159,12 +118,15 @@
                     animation="property: rotation; to: 0 0 90; dir: alternate; loop: true; dur: 600">
                 </a-cylinder>
                 
+                <!-- Legs -->
                 <a-cylinder position="-0.12 0.05 0" radius="0.08" height="0.25" color="#0066CC"></a-cylinder>
                 <a-cylinder position="0.12 0.05 0" radius="0.08" height="0.25" color="#0066CC"></a-cylinder>
                 
+                <!-- Feet (black shoes) -->
                 <a-box position="-0.12 -0.05 0.08" width="0.15" height="0.05" depth="0.2" color="#000000"></a-box>
                 <a-box position="0.12 -0.05 0.08" width="0.15" height="0.05" depth="0.2" color="#000000"></a-box>
                 
+                <!-- Hair on top -->
                 <a-cone 
                     position="0 1.05 0" 
                     radius-bottom="0.05" 
@@ -174,6 +136,7 @@
                 </a-cone>
             </a-entity>
 
+            <!-- Jumping animation for entire minion -->
             <a-animation
                 attribute="position"
                 from="0 0 0"
@@ -184,6 +147,7 @@
                 easing="ease-in-out">
             </a-animation>
 
+            <!-- Text label -->
             <a-text 
                 value="BANANA!" 
                 position="0 1.5 0" 
@@ -193,6 +157,7 @@
                 animation="property: rotation; to: 0 360 0; loop: true; dur: 3000">
             </a-text>
             
+            <!-- Particle effect (stars) -->
             <a-entity position="0 0.5 0">
                 <a-sphere 
                     position="0.5 0.3 0" 
@@ -211,61 +176,25 @@
     </a-scene>
 
     <script>
-        function startAR() {
-            const loadingDiv = document.getElementById('loading');
-            const arScene = document.getElementById('arScene');
-            const instructions = document.getElementById('instructions');
-
-            // Request camera permission with specific constraints
-            navigator.mediaDevices.getUserMedia({ 
-                video: { 
-                    facingMode: 'environment',
-                    width: { ideal: 1280 },
-                    height: { ideal: 960 }
-                } 
-            })
-                .then(function(stream) {
-                    console.log('Camera access granted');
-                    
-                    // Stop the test stream
-                    stream.getTracks().forEach(track => track.stop());
-                    
-                    // Show AR scene
-                    loadingDiv.style.display = 'none';
-                    arScene.style.display = 'block';
-                    instructions.style.display = 'block';
-                    
-                    // Setup marker detection
-                    const marker = document.querySelector('#marker');
-                    marker.addEventListener('markerFound', () => {
-                        console.log('Marker found!');
-                        instructions.innerHTML = '<h2>🎉 Marker Detected!</h2><p>Minion should appear now!</p>';
-                        setTimeout(() => {
-                            instructions.style.display = 'none';
-                        }, 2000);
-                    });
-                    marker.addEventListener('markerLost', () => {
-                        console.log('Marker lost');
-                        instructions.style.display = 'block';
-                        instructions.innerHTML = '<h2>🎯 Point at Hiro Marker</h2><p>Hold phone ~30cm away from marker</p>';
-                    });
-                })
-                .catch(function(error) {
-                    console.error('Camera error:', error);
-                    loadingDiv.innerHTML = `
-                        <h2 class="error">⚠️ Camera Error</h2>
-                        <p>Please check:</p>
-                        <p><strong>1.</strong> Allow camera in browser settings</p>
-                        <p><strong>2.</strong> Close other apps using camera</p>
-                        <p><strong>3.</strong> Reload and try again</p>
-                        <button onclick="location.reload()">Reload Page</button>
-                        <p style="font-size: 11px; margin-top: 15px; color: #ccc;">
-                            Error: ${error.message}
-                        </p>
-                    `;
-                    loadingDiv.classList.add('error');
-                });
-        }
+        // Hide instructions after marker is detected
+        const marker = document.querySelector('#marker');
+        const instructions = document.getElementById('instructions');
+        
+        marker.addEventListener('markerFound', () => {
+            console.log('Marker found!');
+            instructions.innerHTML = '<h2>🎉 MINION DETECTED!</h2><p>Look closely at the marker!</p>';
+            instructions.classList.add('found');
+            setTimeout(() => {
+                instructions.style.display = 'none';
+            }, 2000);
+        });
+        
+        marker.addEventListener('markerLost', () => {
+            console.log('Marker lost');
+            instructions.style.display = 'block';
+            instructions.classList.remove('found');
+            instructions.innerHTML = '<h2>🎯 Point camera at Hiro marker</h2><p>Your Minion will appear and dance!</p><p style="font-size: 12px; margin-top: 10px;">📏 Hold phone about 20-30cm (8-12 inches) from marker</p>';
+        });
     </script>
 </body>
 </html>
