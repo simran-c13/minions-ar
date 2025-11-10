@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Minions AR Experience</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js@3.4.0/aframe/build/aframe-ar.js"></script>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            font-family: Arial, sans-serif;
+        }
+        #instructions {
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0,0,0,0.8);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 10px;
+            z-index: 1000;
+            text-align: center;
+            max-width: 80%;
+        }
+        #instructions h2 {
+            margin: 0 0 10px 0;
+            font-size: 18px;
+        }
+        #instructions p {
+            margin: 5px 0;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div id="instructions">
+        <h2>🎯 Point camera at Hiro marker</h2>
+        <p>Your Minion will appear and dance!</p>
+    </div>
+
+    <a-scene
+        embedded
+        arjs="sourceType: webcam; debugUIEnabled: false; detectionMode: mono_and_matrix; matrixCodeType: 3x3;"
+        vr-mode-ui="enabled: false"
+        renderer="logarithmicDepthBuffer: true; precision: medium;">
+        
+        <a-entity camera></a-entity>
+
+        <a-marker preset="hiro" id="marker">
+            <a-entity id="minion" position="0 0 0">
+                <a-cylinder 
+                    position="0 0.5 0" 
+                    radius="0.3" 
+                    height="0.8" 
+                    color="#FFD700"
+                    animation="property: rotation; to: 0 360 0; loop: true; dur: 4000; easing: linear">
+                </a-cylinder>
+                
+                <a-box 
+                    position="0 0.3 0.2" 
+                    width="0.5" 
+                    height="0.4" 
+                    depth="0.1" 
+                    color="#0066CC">
+                </a-box>
+                
+                <a-entity position="0 0.7 0.25">
+                    <a-torus 
+                        radius="0.25" 
+                        radius-tubular="0.03" 
+                        rotation="90 0 0" 
+                        color="#333333">
+                    </a-torus>
+                    <a-sphere 
+                        radius="0.12" 
+                        color="white"
+                        animation="property: scale; to: 1 1.2 1; dir: alternate; loop: true; dur: 500">
+                        <a-sphere 
+                            position="0 0 0.08" 
+                            radius="0.06" 
+                            color="#654321">
+                        </a-sphere>
+                    </a-sphere>
+                </a-entity>
+                
+                <a-cylinder 
+                    position="-0.35 0.5 0" 
+                    radius="0.05" 
+                    height="0.4" 
+                    rotation="0 0 -45" 
+                    color="#FFD700"
+                    animation="property: rotation; to: 0 0 -90; dir: alternate; loop: true; dur: 600">
+                </a-cylinder>
+                <a-cylinder 
+                    position="0.35 0.5 0" 
+                    radius="0.05" 
+                    height="0.4" 
+                    rotation="0 0 45" 
+                    color="#FFD700"
+                    animation="property: rotation; to: 0 0 90; dir: alternate; loop: true; dur: 600">
+                </a-cylinder>
+                
+                <a-cylinder position="-0.12 0.05 0" radius="0.08" height="0.25" color="#0066CC"></a-cylinder>
+                <a-cylinder position="0.12 0.05 0" radius="0.08" height="0.25" color="#0066CC"></a-cylinder>
+                
+                <a-box position="-0.12 -0.05 0.08" width="0.15" height="0.05" depth="0.2" color="#000000"></a-box>
+                <a-box position="0.12 -0.05 0.08" width="0.15" height="0.05" depth="0.2" color="#000000"></a-box>
+                
+                <a-cone 
+                    position="0 1.05 0" 
+                    radius-bottom="0.05" 
+                    radius-top="0.01" 
+                    height="0.15" 
+                    color="#654321">
+                </a-cone>
+            </a-entity>
+
+            <a-animation
+                attribute="position"
+                from="0 0 0"
+                to="0 0.3 0"
+                direction="alternate"
+                dur="800"
+                repeat="indefinite"
+                easing="ease-in-out">
+            </a-animation>
+
+            <a-text 
+                value="BANANA!" 
+                position="0 1.5 0" 
+                align="center" 
+                color="#FFD700"
+                width="3"
+                animation="property: rotation; to: 0 360 0; loop: true; dur: 3000">
+            </a-text>
+            
+            <a-entity position="0 0.5 0">
+                <a-sphere 
+                    position="0.5 0.3 0" 
+                    radius="0.05" 
+                    color="#FFD700"
+                    animation="property: position; to: 0.8 0.8 0; loop: true; dur: 1500">
+                </a-sphere>
+                <a-sphere 
+                    position="-0.5 0.3 0" 
+                    radius="0.05" 
+                    color="#FFD700"
+                    animation="property: position; to: -0.8 0.8 0; loop: true; dur: 1500">
+                </a-sphere>
+            </a-entity>
+        </a-marker>
+    </a-scene>
+
+    <script>
+        const marker = document.querySelector('#marker');
+        marker.addEventListener('markerFound', () => {
+            document.getElementById('instructions').style.display = 'none';
+        });
+        marker.addEventListener('markerLost', () => {
+            document.getElementById('instructions').style.display = 'block';
+        });
+    </script>
+</body>
+</html>
